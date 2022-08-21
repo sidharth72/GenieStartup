@@ -59,7 +59,7 @@ const Login = () => {
           
         }
       }).catch((errors)=>{
-        if(errors.response.status===500){
+        if(errors.response.status===401){
           notify();
 
         }

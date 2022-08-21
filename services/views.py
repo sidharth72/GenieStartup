@@ -27,11 +27,32 @@ class NotesViewset(viewsets.ModelViewSet):
     queryset = Notes.objects.all()
     serializer_class = NoteSerializer
     permission_classes = [IsAuthenticated]
+    lookup_field = "pk"
 
     def list(self, request, *args, **kwargs):
         data = Notes.objects.filter(user=request.user)
         serializer = NoteSerializer(data, many=True)
         return Response(serializer.data)
+
+    def create(self, request, format=None):
+        data = deepcopy(request.data)
+        data['user'] = request.user.id
+        serializer = NoteSerializer(data = data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, format=None, *args, **kwargs):
+        pk = self.kwargs.get('pk')
+        instance = Notes.objects.get(pk=pk)
+        data = deepcopy(request.data)
+        data['user'] = request.user.id
+        serializer = NoteSerializer(instance=instance, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class StudyMaterialServiceViewset(viewsets.ModelViewSet):

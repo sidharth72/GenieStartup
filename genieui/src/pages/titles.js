@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { Box, Container, Grid, Pagination } from '@mui/material';
+import { Box, Container, Grid, IconButton, Pagination } from '@mui/material';
 import { products } from '../__mocks__/products';
 import { TitleListToolbar } from '../components/product/title-list-toolbar';
 import { ProductCard } from '../components/product/product-card';
@@ -26,20 +26,50 @@ import { NavItem } from 'src/components/nav-item';
 import axiosInstance from './axios';
 import { useRouter } from 'next/router'
 import AddSection from 'src/components/editor';
-
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 
 const Titles = () => {
 
   const [userData, setUserData] = useState([]);
+  const router = useRouter();
+  const [reloading, setReloading] = useState(false)
+  const [showModal, setShowModal] = useState();
+  const [selectedID, setSelectedID] = useState();
+  const [selectedTitle, setSelectedTitle] = useState();
+  const theme = useTheme();
 
-  const router = useRouter()
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  useEffect(()=>{
+  const handleClose = () => {
+    setShowModal(false)
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
+    setSelectedID(null);
+    setSelectedTitle(null);
+  }
+
+
+  const getData = () => {
     axiosInstance.get("notesapi/create/").then((response)=>{
       setUserData(response.data);
+      setReloading(false)
     })
-  }, [])
+  }
+  console.log(reloading)
+  useEffect(()=>{
+    getData();
+  }, [reloading])
 
     return(
       <>
@@ -63,19 +93,31 @@ const Titles = () => {
     sx={{padding:"0px",marginTop:"30px", width: '100%', maxWidth: "100%", bgcolor: 'transparent' }}>
       <nav aria-label="">
         {
-          userData.map((value, index)=>{
+          userData.reverse().map((value, index)=>{
 
             return(
                 <div key={index}>
                     <List>
                       <ListItem >
                         
-                          <Button onClick={()=>{localStorage.setItem("notesID", value['data'].id);localStorage.setItem('notesTitle', value['title']);router.push('/notes')}} variant="text" style={{color:"#121212"}} size="large"
+                          <Button onClick={()=>{
+                            localStorage.setItem("notesID", value['data'].id);
+                            localStorage.setItem('notesTitle', value['title']);
+                            localStorage.setItem('notesDesc', value['desc']);
+                            localStorage.setItem('contentID', value['id']);
+                            router.push('/notes')}} variant="text" style={{color:"#121212"}} size="large"
                           startIcon={(<AssignmentOutlinedIcon color="primary" size="large" />)}
                           >
-                       
+
                             {value['title']}
                           </Button>
+
+
+                            <Tooltip style={{marginLeft:"auto"}}  title={`Delete ${value['title']}`}>
+                            <IconButton onClick={()=>{setSelectedID(value['id']);setSelectedTitle(value['title']);setShowModal(true); }} spacing={200} aria-label="delete">
+                              <DeleteOutlineIcon size="small" style={{color:"#6B7280"}}/>
+                            </IconButton>
+                            </Tooltip>
                         
                           {/*<Link
                           disabled
@@ -94,9 +136,37 @@ const Titles = () => {
 
                 )
               })
+
+           
             }
+                  
+              <Dialog
+                fullScreen={fullScreen}
+                open={showModal}
+                onClose={handleClose}
+                aria-labelledby="responsive-dialog-title"
+              >
+                <DialogTitle id="responsive-dialog-title">
+                  {`Delete ${selectedTitle}`}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Are you sure want to delete the topic "{selectedTitle}" ?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button autoFocus onClick={()=>{handleCancel(); setReloading(true)}}>
+                    Cancel
+                  </Button>
+                  <Button onClick={()=>{axiosInstance.delete(`notesapi/create/${selectedID}/`); setReloading(true); handleClose()}} autoFocus>
+                    Ok
+                  </Button>
+                </DialogActions>
+              </Dialog>
       </nav>
     </Box>
+
+
 
       </Container>
     </Box>

@@ -19,7 +19,7 @@ class NoteSerializer(WritableNestedModelSerializer,serializers.ModelSerializer):
 	data = StudyMaterialServiceSerializer()
 	class Meta:
 		model = Notes
-		fields = ['id','user','title','data']
+		fields = ['id','user','title','desc','data']
 		
 
 

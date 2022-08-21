@@ -9,6 +9,7 @@ import { Users as UsersIcon } from '../icons/users';
 import NextLink from 'next/link';
 import Button from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useRouter } from 'next/router';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -17,7 +18,7 @@ const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
 
 export const DashboardNavbar = (props) => {
   const { onSidebarOpen, ...other } = props;
-
+  const router = useRouter();
   return (
     <>
       <DashboardNavbarRoot
@@ -51,13 +52,10 @@ export const DashboardNavbar = (props) => {
 
           </IconButton>
           <Tooltip title="Back">
-            <IconButton sx={{ ml: 3 }}>
-              <NextLink
-                href="/"
-                passHref
-                >
-                <ArrowBackIcon fontSize="medium" />
-              </NextLink>
+            <IconButton onClick={()=>router.back()} sx={{ ml: 3 }}>
+
+            <ArrowBackIcon fontSize="medium" />
+              
             </IconButton>
           </Tooltip>
           <Box sx={{ flexGrow: 3 }} />

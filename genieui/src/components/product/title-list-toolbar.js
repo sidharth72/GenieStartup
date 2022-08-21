@@ -12,8 +12,14 @@ import { Download as DownloadIcon } from '../../icons/download';
 import { Search as SearchIcon } from '../../icons/search';
 import { Upload as UploadIcon } from '../../icons/upload';
 import AddIcon from '@mui/icons-material/Add';
+import { useRouter } from 'next/router';
 
-export const TitleListToolbar = (props) => (
+
+
+export const TitleListToolbar = (props) => {
+  const router = useRouter();
+  return(
+  <>
   <Box {...props}>
     <Box
       sx={{
@@ -44,6 +50,7 @@ export const TitleListToolbar = (props) => (
           Export
         </Button>
         <Button
+          onClick={()=>router.push('/create-notes')}
          startIcon={(<AddIcon fontSize="small" />)}
           color="primary"
           variant="contained"
@@ -78,4 +85,6 @@ export const TitleListToolbar = (props) => (
       </Card>
     </Box>
   </Box>
-);
+  </>
+  )
+}

@@ -38,11 +38,14 @@ import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import AddSection from '../components/editor';
+import { useRouter } from 'next/router';
+import EditIcon from '@mui/icons-material/Edit';
 
 const drawerWidth = 240;
 
 export default function PermanentDrawerRight() {
 
+  const router = useRouter();
   if(typeof window !== 'undefined'){
     localStorage.getItem('notesTitle');
   }
@@ -80,10 +83,33 @@ export default function PermanentDrawerRight() {
         <Toolbar />
           
           <div style={{boxShadow:"", marginRight:"60px", marginLeft:"60px"}}>
-          <CardHeader
-              subheader="Let Genie create your notes"
-              title={(typeof window !== "undefined") ? localStorage.getItem('notesTitle'): console.log("Authentication error")}
-        />
+          
+              <Typography
+                color="textPrimary"
+                variant="h5"
+              >
+                {(typeof window !== "undefined") ? localStorage.getItem('notesTitle'): console.log("Authentication error")}
+              </Typography>
+
+              <br/>
+
+              <Typography
+                color="textSecondary"
+                gutterBottom
+                variant="body2"
+              >
+                {(typeof window !== "undefined") ? localStorage.getItem('notesDesc'): console.log("Authentication error")}
+              </Typography>
+        
+        <Button
+          size="small"
+          color="secondary"
+          onClick={()=>router.push('/edit-notes')}
+          startIcon={(<EditIcon fontSize="small" />)}
+          sx={{ mr: 1 }}
+        >
+          Edit title and description
+        </Button>
 
         
       <Grid container justifyContent="flex-end">
