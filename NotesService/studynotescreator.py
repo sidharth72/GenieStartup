@@ -1,6 +1,6 @@
 import openai
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 
 def create_study_notes(query,start):

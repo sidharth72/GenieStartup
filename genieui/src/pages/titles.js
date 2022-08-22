@@ -66,7 +66,7 @@ const Titles = () => {
       setReloading(false)
     })
   }
-  console.log(reloading)
+
   useEffect(()=>{
     getData();
   }, [reloading])
@@ -114,7 +114,7 @@ const Titles = () => {
 
 
                             <Tooltip style={{marginLeft:"auto"}}  title={`Delete ${value['title']}`}>
-                            <IconButton onClick={()=>{setSelectedID(value['id']);setSelectedTitle(value['title']);setShowModal(true); }} spacing={200} aria-label="delete">
+                            <IconButton onClick={()=>{setSelectedID(value['data'].id);setSelectedTitle(value['title']);setShowModal(true); }} spacing={200} aria-label="delete">
                               <DeleteOutlineIcon size="small" style={{color:"#6B7280"}}/>
                             </IconButton>
                             </Tooltip>
@@ -158,7 +158,7 @@ const Titles = () => {
                   <Button autoFocus onClick={()=>{handleCancel(); setReloading(true)}}>
                     Cancel
                   </Button>
-                  <Button onClick={()=>{axiosInstance.delete(`notesapi/create/${selectedID}/`); setReloading(true); handleClose()}} autoFocus>
+                  <Button onClick={()=>{axiosInstance.delete(`notesapi/update/${selectedID}/`); setReloading(true); handleClose()}} autoFocus>
                     Ok
                   </Button>
                 </DialogActions>

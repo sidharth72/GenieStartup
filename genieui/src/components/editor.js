@@ -25,13 +25,18 @@ import { Editor } from '@tinymce/tinymce-react';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import LoadingButton from '@mui/lab/LoadingButton';
+import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
+import CodeIcon from '@mui/icons-material/Code';
+import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import EditIcon from '@mui/icons-material/Edit';
 
 
 
 export const AddSection = (props) => {
 
-    const [open, setOpen] = useState(false);
-    const [words, setWords] = useState('');
+    //const [open, setOpen] = useState(false);
+    //const [words, setWords] = useState('');
     const [loading, setLoading] = useState(false)
 
     const [userData, setUserData] = useState([])
@@ -67,7 +72,7 @@ export const AddSection = (props) => {
             'Just a title'),
         response_from_ai: Yup
           .string()
-          .max(10000)
+          .max(500)
           
       }),
       onSubmit: values => {
@@ -101,16 +106,16 @@ export const AddSection = (props) => {
     return (
         <form {...props}>
           <div>
-          <Card variant="primary">
-                  <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
+          <Card container justifyContent="flex-end" style={{backgroundColor:"transparent"}} variant="primary">
+                  <Dialog disableEscapeKeyDown open={props.open} onClose={handleClose}>
                     <DialogTitle>Fill the form</DialogTitle>
                     <DialogContent>
-                      <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                      <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' , }}>
                         <FormControl sx={{ m: 1, minWidth: 300 }}>
                           <InputLabel htmlFor="demo-dialog-native">Words</InputLabel>
                           <Select
                             native
-                            value={words}
+                            value={props.words}
                             onChange={handleChange}
                             input={<OutlinedInput label="Words" id="demo-dialog-native" />}
                           >
@@ -134,48 +139,71 @@ export const AddSection = (props) => {
             
                     <Box sx={{ m: 1 }}>
 
-                    <Tooltip title="Save">
-                    <LoadingButton
-                        
-                        color="primary"
-                        variant="text"
-                        loading={false}
-                        loadingPosition='start'
-                        startIcon={(<SaveOutlinedIcon fontSize="large" />)}
-                            //disabled={formik.isSubmitting}
-                        size="small"
-                       
-                        onClick={formik.handleSubmit}
                           
-                      >
-                        Save
-                      </LoadingButton>
-                      </Tooltip>
-                    
-                    <Tooltip title="translate to other languages">
-                    <Button
-                      startIcon={(<TranslateIcon fontSize="medium" />)}
-                      sx={{ mr: 1 }}
-                    >
-                      Translate
-                    </Button>
-                    
-                    </Tooltip>
-                    <Tooltip title="Number of words to generate">
-                    <Button
-                      startIcon={(<PinOutlinedIcon fontSize="medium" />)}
-                      sx={{ mr: 1 }}
-                      onClick={handleClickOpen}
-                    >
-                      Words
-                    </Button>
-                    </Tooltip>
-            
-                  </Box>
-            
+                                <Tooltip title="translate to other languages">
+                                <Button
+                                color="primary"
+                                  startIcon={(<TranslateIcon fontSize="medium" />)}
+                                  sx={{ mr: 1 }}
+                                >
+                                  
+                                </Button>
+                                
+                                </Tooltip>
+                                <Tooltip title="Number of words to generate">
+                                <Button
+                                color="primary"
+                                  startIcon={(<PinOutlinedIcon fontSize="medium" />)}
+                                  sx={{ mr: 1 }}
+                                  onClick={handleClickOpen}
+                                >
+                                  
+                                </Button>
+                                </Tooltip>
+
+                                  <Tooltip title="Export as PDF">
+                                    <Button
+                                    color="secondary"
+                                    startIcon={(<PictureAsPdfOutlinedIcon fontSize="small" />)}
+                                    sx={{ mr: 1 }}
+                                  >
+                                    
+                                  </Button>
+                                  </Tooltip>
+
+                                  <Tooltip title="Export as HTML">
+                                  <Button
+                                    color="secondary"
+                                    startIcon={(<CodeIcon fontSize="small" />)}
+                                    sx={{ mr: 1 }}
+                                  >
+                                    
+                                  </Button>
+                                  </Tooltip>
+
+                                  <Tooltip title="Export as raw text">
+                                  <Button
+                                    color="secondary"
+                                    variant="text"
+                                    startIcon={(<FormatColorTextIcon fontSize="small"/>)}
+                                  >
+                                  
+                                  </Button>
+                                </Tooltip>
+                                  <Tooltip title="Export as handwritten data(JPG)">
+                                  <Button
+                                    color="secondary"
+                                    variant="text"
+                                    startIcon={(<CreateOutlinedIcon fontSize="small"/>)}
+                                  >
+                                  
+                                  </Button>
+                                  </Tooltip>
+
+                                </Box>
+                          
                   </Grid>
-            
-                    <Divider />
+
                     <CardContent>
                       <TextField
                         key={userData.id}
@@ -190,9 +218,9 @@ export const AddSection = (props) => {
                         defaultValue={userData.query}//formik.values.query}
                         variant="outlined"
                       />
-
-
+                 
                     <Editor
+                    apiKey='sb3nza10ov6zu4qlikx33uk6g6wl2i3az3ocv5c7rgxrqi8d'
                           key={2}
                           initialValue={userData.response_from_ai}                            
                             init={{
@@ -207,7 +235,7 @@ export const AddSection = (props) => {
                                 'bold italic forecolor | alignleft aligncenter ' +
                                 'alignright alignjustify | bullist numlist outdent indent | ' +
                                 'removeformat | help',
-                              content_style: 'body { background-color:"#F9FAFC"; font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"; font-size:16px }',
+                              content_style: 'body { background:"#F9FAFC"; font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"; font-size:16px }',
                               branding:false
                             
                             }}
@@ -253,13 +281,31 @@ export const AddSection = (props) => {
                         p: 3
                       }}
                     >
+
+                          {/*<Tooltip title="Save">
+                              <LoadingButton
+                                  
+                                  color="primary"
+                                  variant="text"
+                                  loading={false}
+                                  loadingPosition='start'
+                                  //endIcon={(<SaveOutlinedIcon fontSize="large" />)}
+                                      //disabled={formik.isSubmitting}
+                                  size="small"
+                                
+                                  //onClick={}
+                                    
+                                >
+                                  Save
+                                </LoadingButton>
+                    </Tooltip>*/}
             
                       <LoadingButton
                         color="primary"
                         variant="contained"
                         loading={loading}
                         loadingPosition='end'
-                        endIcon={(<ArrowRightIcon fontSize="large" />)}
+                        //startIcon={(<ArrowRightIcon fontSize="large" />)}
                             //disabled={formik.isSubmitting}
                         size="small"
                        

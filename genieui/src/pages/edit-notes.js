@@ -44,15 +44,12 @@ const editNotes = () => {
      
       }),
     onSubmit: values => {
-        values['title'] = localStorage.getItem("notesTitle");
-        values['data'] = {
-        "query":"",
-        "response_from_ai":""
-      };
       const contentID = (typeof window !== "undefined") ? localStorage.getItem('contentID'): console.log("Authentication error")
       axiosInstance.put(`notesapi/create/${contentID}/`, values
       ).then((response)=>{
         setLoading(true)
+        localStorage.setItem('notesTitle', response.data.title)
+        localStorage.setItem('notesDesc', response.data.desc)
         if(response){
           setLoading(false)
           router.back()
@@ -61,11 +58,23 @@ const editNotes = () => {
       }).catch((errors)=>{
         console.log(errors)
         if(errors.response.status===500){
-
+          console.log("Error")
         }
       })
     }
   });
+
+  // Checking whether title or description is null and if 
+  // it is null setting it to the previous value
+  if(
+    
+    formik.values.title === "" 
+    || formik.values.desc === ""
+    
+    ){
+    formik.values.title =  (typeof window !== "undefined") ? localStorage.getItem('notesTitle'): console.log("Authentication error")
+    formik.values.desc =  (typeof window !== "undefined") ? localStorage.getItem('notesDesc'): console.log("Authentication error")
+  }
 
   return (
     <>
@@ -167,7 +176,7 @@ const editNotes = () => {
                         variant="text"
                         loading={false}
                         loadingPosition='end'
-                        endIcon={(<ArrowRightIcon fontSize="large" />)}
+                        //endIcon={(<ArrowRightIcon fontSize="large" />)}
                             //disabled={formik.isSubmitting}
                         size="medium"
                        
@@ -179,11 +188,11 @@ const editNotes = () => {
 
                                   
                       <LoadingButton
-                        color="primary"
+                        color="secondary"
                         variant="contained"
                         loading={loading}
                         loadingPosition='end'
-                        endIcon={(<ArrowRightIcon fontSize="large" />)}
+                        //endIcon={(<ArrowRightIcon fontSize="large" />)}
                             //disabled={formik.isSubmitting}
                         size="medium"
                        

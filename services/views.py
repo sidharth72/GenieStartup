@@ -120,11 +120,7 @@ class StudyMaterialServiceViewset(viewsets.ModelViewSet):
     # DELETE
     def destroy(self,request,pk, format=None):
         instance = get_object_or_404(CreateStudyMaterialService.objects.all(), pk=pk)
-        if not request.user == instance.user:
-            raise PermissionDenied("Permission Denied")
-        else:
-
-            instance.delete()
+        instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

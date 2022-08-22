@@ -41,9 +41,40 @@ import AddSection from '../components/editor';
 import { useRouter } from 'next/router';
 import EditIcon from '@mui/icons-material/Edit';
 
-const drawerWidth = 240;
+
+
+function getWindowSize() {
+  const {innerWidth, innerHeight} = window;
+  return {innerWidth, innerHeight};
+}
 
 export default function PermanentDrawerRight() {
+
+  const [windowSize, setWindowSize] = React.useState(getWindowSize());
+
+
+  React.useEffect(() => {
+
+
+    function handleWindowResize() {
+      setWindowSize(getWindowSize());
+    }
+
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+
+  }, []);
+
+
+  // Changing the screen size
+  var style = (windowSize.innerWidth <= 728) 
+  ? 
+  {"marginRight":"10px", "marginLeft":"10px", "marginBottom":"30px"} : 
+  {"marginRight":"130px", "marginLeft":"130px", "marginBottom":"30px"}
+
 
   const router = useRouter();
   if(typeof window !== 'undefined'){
@@ -54,39 +85,20 @@ export default function PermanentDrawerRight() {
   }
 
   return (
-    <Box sx={{ display: 'flex', marginLeft:"50px", marginRight:"50px"}}>
+    <Box>
       <CssBaseline />
       <DashboardNavbar/>
-      {/*<AppBar
-        position="absolute"
-        sx={{ backgroundColor:"", height:"#fff", width: '100%', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      >
-        <Toolbar>
-        <NextLink
-            href="/"
-            passHref
-          >
-            <Button  sx={{ '& button': { m: 2 } }} size="large" variant="primary"
-              component="a"
-              startIcon={<ArrowBackIcon fontSize="5px" />
-            }
-            >
-              Dashboard
-            </Button>
-          </NextLink>
-        </Toolbar>
-          </AppBar> */}
+    <div style={style}>
+
       <Box
         component="main"
         sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
       >
         <Toolbar />
-          
-          <div style={{boxShadow:"", marginRight:"60px", marginLeft:"60px"}}>
-          
+           
               <Typography
                 color="textPrimary"
-                variant="h5"
+                variant="h4"
               >
                 {(typeof window !== "undefined") ? localStorage.getItem('notesTitle'): console.log("Authentication error")}
               </Typography>
@@ -110,62 +122,11 @@ export default function PermanentDrawerRight() {
         >
           Edit title and description
         </Button>
-
-        
-      <Grid container justifyContent="flex-end">
-        
-        
-        <Box sx={{ m: 1 }}>
-
-        <Tooltip title="Export as PDF">
-          <Button
-          color="secondary"
-          startIcon={(<PictureAsPdfOutlinedIcon fontSize="small" />)}
-          sx={{ mr: 1 }}
-        >
-     
-        </Button>
-        </Tooltip>
-
-        <Tooltip title="Export as HTML">
-        <Button
-          color="secondary"
-          startIcon={(<CodeIcon fontSize="small" />)}
-          sx={{ mr: 1 }}
-        >
-          
-        </Button>
-        </Tooltip>
-
-        <Tooltip title="Export as raw text">
-        <Button
-          color="secondary"
-          variant="text"
-          startIcon={(<FormatColorTextIcon fontSize="small"/>)}
-        >
-        
-        </Button>
-        </Tooltip>
-
-        
-        <Tooltip title="Export as handwritten data(JPG)">
-        <Button
-          color="secondary"
-          variant="text"
-          startIcon={(<CreateOutlinedIcon fontSize="small"/>)}
-        >
-        
-        </Button>
-        </Tooltip>
-
-                  </Box>
-
-                </Grid>
-            {/* SECTION NOTES ! IMPORTANT */}   
-        <AddSection/>
-
-     </div>
       </Box>
+            {/* SECTION NOTES ! IMPORTANT */}   
+            <AddSection/>
+
+      </div>
     </Box>
   );
 }
