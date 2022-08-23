@@ -1,6 +1,12 @@
 import openai
+from dotenv import load_dotenv
+import os
 
-openai.api_key = "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"
+load_dotenv()
+
+API_KEY = os.getenv('OPEN_API_KEY')
+
+openai.api_key = API_KEY
 
 
 def create_study_notes(query,start):
