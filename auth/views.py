@@ -14,6 +14,7 @@ from django.contrib.auth import logout
 from .serilalizers import MyTokenObtainPairSerializer, UserSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import permissions
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class ObtainTokenPairWithColorView(TokenObtainPairView):
@@ -64,10 +65,15 @@ class LoginView(APIView):
 
 # Logut view
 class Logout(APIView):
-    def get(self, request, format=None):
-        # simply delete the token to force a login
-        request.user.auth_token.delete()
-        logout(request)
-        return Response(status=status.HTTP_200_OK)
+    permission_classes = [permissions.AllowAny]
+    def post(self, request):
+        try:
+            refresh_token = request.data['refresh_token']
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+        except:
+            return Response("Problem occured",status=status.HTTP_400_BAD_REQUEST)
+        return Response("Success")
+
 
     

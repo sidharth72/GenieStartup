@@ -15,7 +15,7 @@ urlpatterns = [
     path('auth/register', views.UserCreate.as_view(), name='user_create'),
     #path('auth/login', views.LoginView.as_view(), name='login'),
     path('auth/login/', views.ObtainTokenPairWithColorView.as_view(), name='token_create'),
-    path('auth/logout', views.Logout.as_view(), name='logout'),
+    path('auth/logout/', views.Logout.as_view(), name='logout'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
